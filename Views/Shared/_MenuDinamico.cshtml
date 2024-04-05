@@ -1,0 +1,40 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Usuario> SignInManager
+@inject UserManager<Usuario> UserManager
+
+
+	<ul class="navbar-nav flex-grow-1">		
+		<li class="nav-item">
+			<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
+		</li>		
+		@if (SignInManager.IsSignedIn(User) && UserManager.IsInRoleAsync(UserManager.GetUserAsync(User).Result, Roles.SuperAdmin.ToString()).Result)
+		{
+			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+					Seguridad
+				</a>
+				<ul class="dropdown-menu">
+					<li><a class="nav-link text-dark" asp-area="" asp-controller="RoleManager" asp-action="Index">Roles</a></li>
+					<li><a class="nav-link text-dark" asp-area="" asp-controller="UserRoles" asp-action="Index">Usuario Roles</a></li>
+				</ul>
+			</li>
+		}
+		@if (SignInManager.IsSignedIn(User) && 
+			(UserManager.IsInRoleAsync(UserManager.GetUserAsync(User).Result, Roles.SuperAdmin.ToString()).Result ||
+			UserManager.IsInRoleAsync(UserManager.GetUserAsync(User).Result, Roles.Admin.ToString()).Result))
+		{
+			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+					Administración
+				</a>
+				<ul class="dropdown-menu">
+					<li><a class="nav-link text-dark" asp-area="" asp-controller="Categoria" asp-action="Index">Categorías</a></li>
+					<li><a class="nav-link text-dark" asp-area="" asp-controller="Proveedor" asp-action="Index">Proveedores</a></li>
+					<li><a class="nav-link text-dark" asp-area="" asp-controller="Producto" asp-action="Index">Productos</a></li>
+					<li><a class="nav-link text-dark" asp-area="" asp-controller="Producto" asp-action="Inventario">Inventario</a></li>
+					<li><a class="nav-link text-dark" asp-area="" asp-controller="Compra" asp-action="Index">Compras</a></li>
+					<li><a class="nav-link text-dark" asp-area="" asp-controller="Configuracion" asp-action="Index">Configuración Facturación</a></li>
+				</ul>
+			</li>
+		}
+	</ul>

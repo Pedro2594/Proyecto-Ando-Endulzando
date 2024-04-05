@@ -1,0 +1,180 @@
+﻿@using DesWebProyectoFinal.Data.Entities;
+@model OrdenFacturaViewModel
+@{
+    ViewData["Title"] = "Facturar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <h1>Orden</h1>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 rounded-3 border-1">
+            <div class="row mb-1">
+                <div class="col-1"><strong>Orden:</strong></div>
+                <div class="col-5 subrayado">@Model.Orden.Id</div>
+                <div class="col-1"><strong>Fecha:</strong></div>
+                <div class="col-5 subrayado">@Model.Orden.Fecha</div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-1"><strong>Cliente:</strong></div>
+                <div class="col-5 subrayado">@Model.Orden.Cliente.NombreCompleto()</div>
+                <div class="col-1"><strong>RTN:</strong></div>
+                <div class="col-5 subrayado">@Model.Orden.Cliente.RTN</div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-4"><strong>Dirección de Entrega:</strong></div>
+                <div class="col-8 subrayado">@Model.Orden.DireccionEntrega</div>
+            </div>
+            <div class="row mb-1">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Total Línea</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(var det in Model.Orden.Detalle)
+                        {
+                            var total = det.PrecioVenta * det.Cantidad;
+                            <tr>
+                                <td>@det.Producto.Nombre</td>
+                                <td>L. @det.PrecioVenta.ToString("#,##0.00#")</td>
+                                <td>@det.Cantidad</td>
+                                <td>L. @total.ToString("#,##0.00")</td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td><strong>Total:</strong></td>
+                            <td>L. @Model.Orden.Total.ToString("#,##0.00")</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <h1>Factura</h1>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 rounded-3 border-1">
+            <div class="row mb-1 text-center">
+                <small>R.T.N.: @Model.Factura.RTNFacturacion</small>
+            </div>
+            <div class="row mb-1 text-center">
+                <small>@Model.Factura.DireccionFacturacion</small>
+            </div>
+            <div class="row mb-1 text-center">
+                <small>@Model.Factura.CorreoFacturacion</small>
+            </div>
+            <div class="row mb-1 text-center">
+                <small>@Model.Factura.TelefonoFacturacion</small>
+            </div>
+            <div class="row mb-1 text-center">
+                <small><strong>CAI:</strong> @Model.Factura.CAI</small>
+            </div>
+            <div class="row mb-1 text-center">
+                <strong>FACTURA:</strong> @Model.Factura.Numero
+            </div>
+            <div class="row mb-1">
+                <div class="col-1"><strong>Fecha:</strong></div>
+                <div class="col-5 subrayado">@Model.Factura.Fecha</div>
+                <div class="col-1"><strong>Cliente:</strong></div>
+                <div class="col-5 subrayado">@Model.Factura.NombreCliente</div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-1"><strong>RTN:</strong></div>
+                <div class="col-5 subrayado">@Model.Factura.RTNCliente</div>
+                <div class="col-3"><strong>Feccha Limite Emisión:</strong></div>
+                <div class="col-2 subrayado">@Model.Factura.FechaLimiteEmision</div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-1"><strong>Rango Desde:</strong></div>
+                <div class="col-5 subrayado">@Model.Factura.RangoDesde</div>
+                <div class="col-1"><strong>Rango Hasta:</strong></div>
+                <div class="col-5 subrayado">@Model.Factura.RangoHasta</div>
+            </div>
+            <div class="row mb-1">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Cantidad</th>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                            <th>ISV Total</th>
+                            <th>Total Línea</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            var totISV = 0.0m;
+                            var TotalFact = 0.0m;
+                            var SubTotal = 0.0m;
+                        }
+                        @foreach (var det in Model.Factura.Detalle)
+                        {                            
+                            <tr>
+                                <td>@det.Cantidad</td>
+                                <td>@det.Producto.Nombre</td>
+                                <td>L. @det.PrecioBruto.ToString("#,##0.00#")</td>
+                                <td>L. @det.ISV.ToString("#,##0.00#")</td>
+                                <td>L. @det.TotalLinea.ToString("#,##0.00")</td>
+                            </tr>
+                            SubTotal += (det.PrecioBruto * det.Cantidad);
+                            totISV += det.ISV;
+                            TotalFact += det.TotalLinea;
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td><strong>SubTotal:</strong></td>
+                            <td>L. @SubTotal</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td><strong>ISV:</strong></td>
+                            <td>L. @totISV</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td><strong>Total:</strong></td>
+                            <td>L. @TotalFact.ToString("#,##0.00")</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 text-center">
+            <a asp-controller="Home" asp-action="Index" class="btn btn-primary" role="button">Continuar</a>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</div>
+

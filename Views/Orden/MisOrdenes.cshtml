@@ -1,0 +1,42 @@
+﻿@model List<FacturasViewModel>
+@{
+    ViewData["Title"] = "MisOrdenes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <div class="row mb-2 text-center">
+                <h1>Mis Facturas</h1>
+            </div>
+            <div class="row mb-1">
+                <table class="table table-stripped">
+                    <thead>
+                        <tr>
+                            <th>Factura</th>
+                            <th>Fecha</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(var fact in Model)
+                        {
+                            <tr>
+                                <td>@fact.NumeroFactura</td>
+                                <td>@fact.FechaFactura.ToString("dd/MM/yyyy")</td>
+                                <td>
+                                    <a href="/Orden/VerFactura?FacturaId=@fact.FacturaId" class="btn btn-primary" role="button"><i class="bi bi-receipt-cutoff"></i> Ver Factura</a>
+                                    <a href="/Orden/VerOrden?OrdenId=@fact.OrdenId" class="btn btn-success" role="button"><i class="bi bi-file-ruled"></i> Ver Orden</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+</div>
+

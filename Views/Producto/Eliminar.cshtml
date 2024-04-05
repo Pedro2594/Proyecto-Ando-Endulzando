@@ -1,0 +1,102 @@
+﻿@model ProductoViewModel
+@{
+    ViewData["Title"] = "Eliminar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-2">
+        </div>
+        <div class="col-8">
+            <div class="row form-title">
+                <h1>Eliminar Producto</h1>
+            </div>
+            <div class="row form-body">
+                <form asp-action="Eliminar" asp-controller="Producto" method="post">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="row mb-1">
+                        <div class="col-md-6">
+                            <div class="row mb-1">
+                                <div class="form-group">
+                                    <label asp-for="Nombre" class="control-label">Nombre:</label>
+                                    <input asp-for="Nombre" class="form-control" readonly />
+                                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="form-group">
+                                    <label asp-for="Descripcion" class="control-label">Descripción:</label>
+                                    <textarea asp-for="Descripcion" class="form-control" readonly ></textarea>
+                                    <span asp-validation-for="Descripcion" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="form-group">
+                                    <label asp-for="PrecioVenta" class="control-label">Precio de Venta</label>
+                                    <input asp-for="PrecioVenta" class="form-control" readonly />
+                                    <span asp-validation-for="PrecioVenta" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="form-group">
+                                    <label asp-for="Stock" class="control-label">Stock</label>
+                                    <input asp-for="Stock" class="form-control" readonly />
+                                    <span asp-validation-for="Stock" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            @if (Model.Foto != null)
+                            {
+                                <img id="imgFoto" style="width:350px;height:350px; object-fit:cover" src="data:image/*;base64,@(Convert.ToBase64String(Model.Foto))">
+                            }
+                            else
+                            {
+                                <img id="imgFoto" style="width:350px;height:350px; object-fit:cover" src="">
+                            }
+                            
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="form-group">
+                            <label asp-for="Categoria" class="control-label"></label>
+                            @Html.DropDownList("Categoria", Model.Categorias,new {@class="form-control", @value=Model.Categoria, @disabled=true})
+                            <span asp-validation-for="Categoria" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="form-group">
+                            <label asp-for="Proveedor" class="control-label"></label>
+                            @Html.DropDownList("Proveedor", Model.Proveedores,new {@class="form-control", @value=Model.Proveedor, @disabled=true})
+                            <span asp-validation-for="Proveedor" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-1">
+                        <div class="col-6 text-center">
+                            <button type="submit" class="btn btn-primary">Eliminar</button>
+                        </div>
+                        <div class="col-6 text-center">
+                            <a asp-action="Index" asp-controller="Producto" class="btn btn-danger" role="button">Cancelar</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="row form-footer">
+                &nbsp;
+            </div>
+        </div>
+        <div class="col-2">
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+

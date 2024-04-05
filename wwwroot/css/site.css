@@ -1,0 +1,107 @@
+:root {
+    --ch-blue: #0055B8;
+    --ch-yellow: #FFD100;
+    --ch-red: #AF0808FF;
+    --ch-green: #30AF38;
+    --bs-primary: #f5e15f;
+}
+
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.form-title{
+    background-color: var(--ch-blue);
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    color: white;
+    padding: 2px;
+}
+
+.form-footer {
+    background-color: var(--ch-blue);
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    color: white;
+    padding: 2px;
+}
+
+.form-body {
+    border-left: 1px solid var(--ch-blue);
+    border-right: 1px solid var(--ch-blue);
+}
+
+.Logo-Inicio{
+    width:600px;
+
+}
+
+.NavBar {
+    background: rgb(242,168,230);
+    background: linear-gradient(90deg, rgba(242,168,230,1) 0%, rgba(245,245,255,1) 60%, rgba(254,225,111,1) 100%);
+}
+
+.btn-primary {
+    color: black;
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+}
+
+.catalogo {
+    background-image: url("/imagenes/fondosistema.jpg");
+    background-repeat: repeat-x;
+    min-height: 100vh;
+}
+
+.imagen-catalogo{
+    height:250px;
+}
+
+.img-carro{
+    height:64px;
+    width:64px;
+    border: 1px solid var(--ch-blue)
+}
+
+.Total-Carro{
+    font-weight:bolder
+}
+
+.hosted-field {
+    height: 50px;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 12px;
+    display: inline-block;
+    box-shadow: none;
+    font-weight: 600;
+    font-size: 14px;
+    border-radius: 6px;
+    border: 1px solid #dddddd;
+    line-height: 20px;
+    background: #fcfcfc;
+    margin-bottom: 12px;
+    background: linear-gradient(to right, white 50%, #fcfcfc 50%);
+    background-size: 200% 100%;
+    background-position: right bottom;
+    transition: all 300ms ease-in-out;
+}
+
+.subrayado{
+    border-bottom: 1px solid black;
+}

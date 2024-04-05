@@ -1,0 +1,145 @@
+﻿@model ConfiguracionViewModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <h1>Configuración Facturación</h1>
+        </div>
+        <div class="col-md-2"></div>
+        
+    </div>
+    <form asp-action="Index" method="post" asp-controller="Configuracion">
+        <div class="row mb-1">
+            <div class="col-md-2"></div>
+            <div class="col-md-4">
+                <label asp-for="RTN">RTN:</label>
+                <input asp-for="RTN" class="form-control"/>
+                <span asp-validation-for="RTN" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="Nombre">Nombre:</label>
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+            <div class="col-md-2"></div>
+
+        </div>
+        <div class="row mb-1">
+            <div class="col-md-2"></div>
+            <div class="col-md-4">
+                <label asp-for="DireccionFacturacion">Dirección:</label>
+                <textarea asp-for="DireccionFacturacion" class="form-control"></textarea>
+                <span asp-validation-for="DireccionFacturacion" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="TelefonoFacturacion">Teléfono Facturación:</label>
+                <input asp-for="TelefonoFacturacion" class="form-control" />
+                <span asp-validation-for="TelefonoFacturacion" class="text-danger"></span>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row mb-1">
+            <div class="col-md-2"></div>
+            <div class="col-md-4">
+                <label asp-for="CorreoFacturacion">Correo:</label>
+                <input asp-for="CorreoFacturacion" class="form-control"/>
+                <span asp-validation-for="CorreoFacturacion" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="CodigoEstablecimientoOnline">Código de establecimiento:</label>
+                <input asp-for="CodigoEstablecimientoOnline" class="form-control" />
+                <span asp-validation-for="CodigoEstablecimientoOnline" class="text-danger"></span>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row mb-1">
+            <div class="col-md-2"></div>
+            <div class="col-md-4">
+                <label asp-for="PuntoEmisionOnline">Punto de emisión:</label>
+                <input asp-for="PuntoEmisionOnline" class="form-control"/>
+                <span asp-validation-for="PuntoEmisionOnline" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="CAIVigente">CAI Vigente:</label>
+                <input asp-for="CAIVigente" class="form-control" />
+                <span asp-validation-for="CAIVigente" class="text-danger"></span>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row mb-1">
+            <div class="col-md-2"></div>
+            <div class="col-md-4">
+                <label asp-for="RangoDesde">Rango Desde:</label>
+                <input asp-for="RangoDesde" class="form-control"/>
+                <span asp-validation-for="RangoDesde" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="RangoHasta">Rango Hasta:</label>
+                <input asp-for="RangoHasta" class="form-control" />
+                <span asp-validation-for="RangoHasta" class="text-danger"></span>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row mb-1">
+            <div class="col-md-2"></div>
+            <div class="col-md-4">
+                <label asp-for="CorrelativoFacturas">Correlativo de facturas:</label>
+                <input asp-for="CorrelativoFacturas" class="form-control"/>
+                <span asp-validation-for="CorrelativoFacturas" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="FechaLimiteEmision">Fecha Limite de Emisión:</label>
+                <input asp-for="FechaLimiteEmision" type="date" class="form-control" />
+                <span asp-validation-for="FechaLimiteEmision" class="text-danger"></span>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row mb-1">
+            <div class="col-md-2"></div>
+            <div class="col-md-8 text-center">
+                <button type="submit" class="btn btn-success">Guardar</button>
+            </div>            
+            <div class="col-md-2"></div>
+        </div>
+    </form>
+    @if(Model.CAIS.Count > 0)
+    {
+        <hr/>
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <h1>CAIs Historicos</h1>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>CAI</th>
+                        <th>Rango Desde</th>
+                        <th>Rango Hasta</th>
+                        <th>Fecha Limite de Emisión</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var cai in Model.CAIS)
+                    {
+                        <tr>
+                            <td>@cai.CAI</td>
+                            <td>@cai.RangoDesde</td>
+                            <td>@cai.RangoHasta</td>
+                            <td>@cai.FechaLimiteEmision</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+

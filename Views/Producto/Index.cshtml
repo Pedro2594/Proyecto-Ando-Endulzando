@@ -1,0 +1,68 @@
+﻿@model ProductoFiltroViewModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h1>Productos</h1>
+    <form asp-action="Index" asp-controller="Producto" method="get">
+    <div class="row mt-2 mb-2">
+            <div class="col-md-2">
+                <label for="FiltroCategoria" class="form-label">Categoría:</label>
+                @Html.DropDownList("FiltroCategoria", Model.Categorias,new {@class="form-control", @value=Model.FiltroCategoria})
+            </div>
+            <div class="col-md-2">
+                <label for="FiltroProveedor" class="form-label">Proveedor:</label>
+                @Html.DropDownList("FiltroProveedor", Model.Proveedores,new {@class="form-control", @value=Model.FiltroProveedor})
+            </div>
+            <div class="col-md-6">
+                <label for="FiltroNombre" class="form-label">Nombre:</label>
+                <input type="text" id="FiltroNombre" name="Filtro" class="form-control">
+                
+            </div>
+            <div class="col-md-2 d-flex flex-column-reverse">
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </div>
+        </div>
+    </form>
+    <hr />
+    <div class="row">
+        <div class="col">
+            <a asp-action="Crear" asp-controller="Producto" class="btn btn-primary" role="button">Crear Producto</a>
+        </div>
+    </div>
+    <div class="row">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Categoría</th>
+                    <th>Proveedor</th>
+                    <th>Stock Actual</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var registro in Model.Productos)
+                {
+                    <tr>
+                        <td>@registro.Nombre</td>
+                        <td>@registro.Descripcion</td>
+                        <td>@registro.Categoria.Nombre</td>
+                        <td>@registro.Proveedor.Nombre</td>
+                        <td>@registro.Stock</td>
+                        <td>
+                            @Html.ActionLink("Editar","Editar","Producto", new {@id = registro.Id}, new {@class="btn btn-info"})
+                            @Html.ActionLink("Eliminar","Eliminar","Producto", new {@id = registro.Id}, new {@class="btn btn-danger"})
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+

@@ -1,0 +1,48 @@
+﻿@using DesWebProyectoFinal.Data.Entities;
+@model List<Categoria>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h1>Categorías</h1>
+    <div class="row mt-2 mb-2">
+        <form asp-action="Index" asp-controller="Categoria" method="get">
+            <label for="Filtro" class="form-label">Nombre:</label>
+            <input type="text" id="Filtro" name="Filtro" class="form-control">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </form>
+    </div>
+    <hr/>
+    <div class="row">
+        <div class="col">
+            <a asp-action="Crear" asp-controller="Categoria" class="btn btn-primary" role="button">Crear Categoría</a>
+        </div>        
+    </div>
+    <div class="row">
+        <table class="table table-striped">
+            <thead>
+                <tr>                    
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var registro in Model)
+                {
+                    <tr>                        
+                        <td>@registro.Nombre</td>
+                        <td>@registro.Descripcion</td>
+                        <td>
+                            @Html.ActionLink("Editar","Editar","Categoria", new {@id = registro.Id}, new {@class="btn btn-info"})
+                            @Html.ActionLink("Eliminar","Eliminar","Categoria", new {@id = registro.Id}, new {@class="btn btn-danger"})
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

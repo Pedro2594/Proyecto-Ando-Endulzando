@@ -1,0 +1,56 @@
+﻿@model CompraFiltroViewModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h1>Compras</h1>
+    <form asp-action="Index" asp-controller="Compra" method="get">
+        <div class="row mt-2 mb-2">            
+            <div class="col-md-4">
+                <label for="FiltroProveedor" class="form-label">Proveedor:</label>
+                @Html.DropDownList("FiltroProveedor", Model.Proveedores,"Todos los proveedores", new {@class="form-control", @value=Model.FiltroProveedor})
+            </div>
+            <div class="col-md-4">
+                <label asp-for="FiltroFecha" class="form-label">Fecha:</label>
+                <input asp-for="FiltroFecha" class="form-control"/>
+            </div>
+            <div class="col-md-4 d-flex flex-column-reverse">
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </div>
+        </div>
+    </form>
+    <hr />
+    <div class="row">
+        <div class="col">
+            <a asp-action="Crear" asp-controller="Compra" class="btn btn-primary" role="button">Crear Compra</a>
+        </div>
+    </div>
+    <div class="row">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Proveedor</th>
+                    <th>Fecha</th>
+                    <th>Total Compra</th>                    
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>                
+                @foreach (var registro in Model.Compras)
+                {
+                    <tr>
+                        <td>@registro.Proveedor.Nombre</td>
+                        <td>@registro.FechaCompra</td>
+                        <td>@registro.TotalCompra</td>                        
+                        <td>
+                            @*@Html.ActionLink("Editar","Editar","Compra", new {@id = registro.Id}, new {@class="btn btn-info"})
+                            @Html.ActionLink("Eliminar","Eliminar","Compra", new {@id = registro.Id}, new {@class="btn btn-danger"})*@
+                        </td>
+                    </tr>                   
+                }
+            </tbody>
+        </table>
+    </div>    
+</div>

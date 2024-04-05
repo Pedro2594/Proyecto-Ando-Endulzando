@@ -1,0 +1,147 @@
+﻿@model ProductoViewModel
+@{
+    ViewData["Title"] = "Editar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-2">
+        </div>
+        <div class="col-8">
+            <div class="row form-title">
+                <h1>Editar Producto</h1>
+            </div>
+            <div class="row form-body">
+                <form asp-action="Editar" asp-controller="Producto" method="post" enctype="multipart/form-data">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="row mb-1">
+                        <div class="col-md-6">
+                            <div class="row mb-1">
+                                <div class="form-group">
+                                    <label asp-for="Nombre" class="control-label">Nombre:</label>
+                                    <input asp-for="Nombre" class="form-control" required />
+                                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="form-group">
+                                    <label asp-for="Descripcion" class="control-label">Descripción:</label>
+                                    <textarea asp-for="Descripcion" class="form-control" required></textarea>
+                                    <span asp-validation-for="Descripcion" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="form-group">
+                                    <label asp-for="PrecioVenta" class="control-label">Precio de Venta</label>
+                                    <input asp-for="PrecioVenta" class="form-control" required />
+                                    <span asp-validation-for="PrecioVenta" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="form-group">
+                                    <label asp-for="Stock" class="control-label">Stock</label>
+                                    <input asp-for="Stock" class="form-control" required />
+                                    <span asp-validation-for="Stock" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            @if (Model.Foto != null)
+                            {
+                                <img id="imgFoto" style="width:350px;height:350px; object-fit:cover" src="data:image/*;base64,@(Convert.ToBase64String(Model.Foto))">
+                            }
+                            else
+                            {
+                                <img id="imgFoto" style="width:350px;height:350px; object-fit:cover" src="">
+                            }
+                            <input type="file"
+                                   accept=".png,.jpg,.jpeg,.gif,.tif"
+                                   asp-for="Foto"
+                                   class="form-control"
+                                   style="border:0px!important;padding: 0px;padding-top: 10px;padding-bottom: 30px;"
+                                   />
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="form-group">
+                            <label asp-for="Categoria" class="control-label"></label>
+                            @Html.DropDownList("Categoria", Model.Categorias,new {@class="form-control", @value=Model.Categoria})
+                            <span asp-validation-for="Categoria" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="form-group">
+                            <label asp-for="Proveedor" class="control-label"></label>
+                            @Html.DropDownList("Proveedor", Model.Proveedores,new {@class="form-control", @value=Model.Proveedor})
+                            <span asp-validation-for="Proveedor" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-1">
+                        <div class="col-6 text-center">
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
+                        <div class="col-6 text-center">
+                            <a asp-action="Index" asp-controller="Producto" class="btn btn-danger" role="button">Cancelar</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="row form-footer">
+                &nbsp;
+            </div>
+        </div>
+        <div class="col-2">
+        </div>
+
+    </div>
+
+</div>
+
+@section scripts
+    {
+    <script>
+        $(document).ready(async function () {
+            const CompressImage = async (file, { quality = 1, type = file.type }) => {
+                const imageBitmap = await createImageBitmap(file);
+
+                const canvas = document.createElement('canvas');
+                canvas.width = imageBitmap.width;
+                canvas.height = imageBitmap.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(imageBitmap, 0, 0);
+
+                const blob = await new Promise((resolve) => canvas.toBlob(resolve, type, quality));
+
+                return await new File([blob], file.name, { type: blob.type })
+            };
+
+            const input = $('#Foto');
+            input.on('change', async (e) => {
+                const { files } = e.target;
+
+                if (!files.length) return;
+                const dataTransfer = new DataTransfer();
+
+                for (const file of files) {
+                    if (!file.type.startsWith('image')) {
+                        dataTransfer.items.add(file);
+                        continue;
+                    }
+                    const compressedFile = await CompressImage(file, { quality: 0.5, type: 'image/jpeg' });
+                    dataTransfer.items.add(compressedFile);;
+                }
+
+                e.target.files = dataTransfer.files;
+                document.getElementById('imgFoto').src = window.URL.createObjectURL(e.target.files[0]);
+            });
+        });
+
+    </script>
+
+}
+
+
+
+

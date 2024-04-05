@@ -1,0 +1,34 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model List<Microsoft.AspNetCore.Identity.IdentityRole>
+@{
+    ViewData["Title"] = "Role Manager";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h1>Administración de Roles</h1>
+@*<form method="post" asp-action="AgregarRol" asp-controller="RoleManager">
+    <div class="input-group">
+        <input name="nombreRol" class="form-control w-25">
+        <span class="input-group-btn">
+            <button class="btn btn-info">Agregar Nuevo Rol</button>
+        </span>
+    </div>
+</form>*@
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Rol</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var rol in Model)
+        {
+            <tr>
+                <td>@rol.Id</td>
+                <td>@rol.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>

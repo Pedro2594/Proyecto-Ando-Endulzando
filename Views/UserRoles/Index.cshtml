@@ -1,0 +1,32 @@
+﻿@using DesWebProyectoFinal.Models
+@model List<DesWebProyectoFinal.Models.UserRolesViewModel>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h1>Usuarios Roles</h1>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Primer Nombre</th>
+            <th>Primer Apellido</th>
+            <th>Email</th>
+            <th>Roles</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.PrimerNombre</td>
+                <td>@user.PrimerApellido</td>
+                <td>@user.Email</td>
+                <td>@string.Join(" , ", user.Roles.ToList())</td>
+                <td>
+                    <a class="btn btn-primary" asp-controller="UserRoles" asp-action="Manage" asp-route-userId="@user.UserId">Administrar Roles</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

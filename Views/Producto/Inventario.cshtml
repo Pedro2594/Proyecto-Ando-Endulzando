@@ -1,0 +1,128 @@
+﻿@model InventarioViewModel
+@{
+    ViewData["Title"] = "Inventario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h1>Inventario</h1>
+    <form asp-action="Inventario" asp-controller="Producto" method="get">
+        <div class="row mt-2 mb-2">
+            <div class="col-md-4">
+                <label for="Categoria" class="form-label">Categoría:</label>
+                @Html.DropDownList("Categoria", Model.Categorias,"Todas las categorías", new {@class="form-control", @value=Model.Categoria})
+            </div>
+            <div class="col-md-4">
+                <label for="Proveedor" class="form-label">Proveedor:</label>
+                @Html.DropDownList("Proveedor", Model.Proveedores,"Todos los proveedores", new {@class="form-control", @value=Model.Proveedor})
+            </div>
+            
+            <div class="col-md-4 d-flex flex-column-reverse">
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </div>
+        </div>
+    </form>
+    <hr />
+    
+    <div class="row">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Categoría</th>
+                    <th>Proveedor</th>
+                    <th>Stock</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int i = 0;
+                }
+                @foreach (var registro in Model.Productos)
+                {
+                    <tr>
+                        <td>@registro.Nombre</td>
+                        <td>@registro.CategoriaNombre</td>
+                        <td>@registro.ProveedorNombre</td>                        
+                        <td><input type="text" id='Prod-@i' value="@registro.Stock" onkeypress="return onlyNumberKey(event)" /></td>
+                        
+                    </tr>
+                    i++;
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="500">
+            <div class="toast-header">
+                <img src="..." class="rounded me-2" alt="...">
+                <strong class="me-auto">Inventario</strong>
+                <small>Actualización</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                Inventario actualizado con éxito.
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section scripts
+    {
+    <script>
+        function onlyNumberKey(evt) {
+
+            // Only ASCII character in that range allowed
+            var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+            if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+                return false;
+            return true;
+        }
+
+        function Actualizar(prodId, inpId){
+            var stock = $(`#${inpId}`).val();
+
+            if(stock === "")
+            {
+                alert('Campo de stock no puede quedar vacio.');
+                return;
+            }
+            
+            if(isNaN(stock)){
+                alert('Valor para stock debe ser un número entero mayor o igual a cero.');
+                return;
+            }
+            $(`#${inpId}`).val = stock;
+            $.ajax({
+                type:'POST',
+                url:'/Producto/Inventario',
+                data: JSON.stringify(
+                    {
+                        Id: prodId,
+                        Stock: stock, 
+                    }
+                ),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function(response){
+                    if(response == true){
+                        const toastActualizacion = document.getElementById('liveToast')
+                        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastActualizacion)
+                        toastBootstrap.show();                                              
+                    }
+                },
+                failure: function(response){
+                    alert(reponse.responseText);
+                },
+                error: function(response){
+                    alert(reponse.ResponseText);
+                }
+            })
+        }       
+    </script>
+}
+
+
+

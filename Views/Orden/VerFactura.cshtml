@@ -1,0 +1,121 @@
+﻿@using DesWebProyectoFinal.Data.Entities;
+@model Factura
+@{
+    ViewData["Title"] = "VerFactura";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">    
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <h1>Factura</h1>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 rounded-3 border-1">
+            <div class="row mb-1 text-center">
+                <small>R.T.N.: @Model.RTNFacturacion</small>
+            </div>
+            <div class="row mb-1 text-center">
+                <small>@Model.DireccionFacturacion</small>
+            </div>
+            <div class="row mb-1 text-center">
+                <small>@Model.CorreoFacturacion</small>
+            </div>
+            <div class="row mb-1 text-center">
+                <small>@Model.TelefonoFacturacion</small>
+            </div>
+            <div class="row mb-1 text-center">
+                <small><strong>CAI:</strong> @Model.CAI</small>
+            </div>
+            <div class="row mb-1 text-center">
+                <strong>FACTURA:</strong> @Model.Numero
+            </div>
+            <div class="row mb-1">
+                <div class="col-1"><strong>Fecha:</strong></div>
+                <div class="col-5 subrayado">@Model.Fecha</div>
+                <div class="col-1"><strong>Cliente:</strong></div>
+                <div class="col-5 subrayado">@Model.NombreCliente</div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-1"><strong>RTN:</strong></div>
+                <div class="col-5 subrayado">@Model.RTNCliente</div>
+                <div class="col-3"><strong>Feccha Limite Emisión:</strong></div>
+                <div class="col-2 subrayado">@Model.FechaLimiteEmision</div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-1"><strong>Rango Desde:</strong></div>
+                <div class="col-5 subrayado">@Model.RangoDesde</div>
+                <div class="col-1"><strong>Rango Hasta:</strong></div>
+                <div class="col-5 subrayado">@Model.RangoHasta</div>
+            </div>
+            <div class="row mb-1">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Cantidad</th>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                            <th>ISV Total</th>
+                            <th>Total Línea</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            var totISV = 0.0m;
+                            var TotalFact = 0.0m;
+                            var SubTotal = 0.0m;
+                        }
+                        @foreach (var det in Model.Detalle)
+                        {
+                            <tr>
+                                <td>@det.Cantidad</td>
+                                <td>@det.Producto.Nombre</td>
+                                <td>L. @det.PrecioBruto.ToString("#,##0.00#")</td>
+                                <td>L. @det.ISV.ToString("#,##0.00#")</td>
+                                <td>L. @det.TotalLinea.ToString("#,##0.00")</td>
+                            </tr>
+                            SubTotal += (det.PrecioBruto * det.Cantidad);
+                            totISV += det.ISV;
+                            TotalFact += det.TotalLinea;
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td><strong>SubTotal:</strong></td>
+                            <td>L. @SubTotal</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td><strong>ISV:</strong></td>
+                            <td>L. @totISV</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td><strong>Total:</strong></td>
+                            <td>L. @TotalFact.ToString("#,##0.00")</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 text-center">
+            <a asp-controller="Orden" asp-action="MisOrdenes" class="btn btn-primary" role="button">Continuar</a>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</div>
+
+
+

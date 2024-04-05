@@ -1,0 +1,49 @@
+﻿@model ProveedorIndexViewModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h1>Proveedores</h1>
+    <div class="row mt-2 mb-2">
+        <form asp-action="Index" asp-controller="Proveedor" method="get">
+            <label for="filtro" class="form-label">Nombre:</label>
+            <input type="text" id="filtro" name="filtro" class="form-control" value="@Model.Filtro">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </form>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col">
+            <a asp-action="Crear" asp-controller="Proveedor" class="btn btn-primary" role="button">Crear Provedor</a>
+        </div>
+    </div>
+    <div class="row">
+        <table class="table table-striped">
+            <thead>
+                <tr>                    
+                    <th>Nombre</th>
+                    <th>Teléfono</th>
+                    <th>Email</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var registro in Model.Registros)
+                {
+                    <tr>                        
+                        <td>@registro.Nombre</td>
+                        <td>@registro.Telefono</td>
+                        <td>@registro.Email</td>
+                        <td>
+                            @Html.ActionLink("Editar","Editar","Proveedor", new {@id = registro.Id}, new {@class="btn btn-info"})
+                            @Html.ActionLink("Eliminar","Eliminar","Proveedor", new {@id = registro.Id}, new {@class="btn btn-danger"})
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

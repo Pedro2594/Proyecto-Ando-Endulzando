@@ -1,0 +1,63 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<Usuario> SignInManager
+@model CatalogoViewModel
+@{
+    ViewData["Title"] = "Productos";
+}
+
+<div class="container catalogo">
+    <div class="row">
+        @foreach(var producto in Model.Productos)
+        {
+            <div class="col">
+                <div class="card" style="width: 18rem;">
+                    
+                    @if(producto.Foto == null)
+                    {
+                        <img src="#" class="card-img-top imagen-catalogo" alt="...">
+                    }
+                    else
+                    {
+                        <img src="data:image/*;base64,@(Convert.ToBase64String(producto.Foto))" class="card-img-top imagen-catalogo" alt="...">
+                    }
+                    
+                    <div class="card-body">
+                        <h5 class="card-title">@producto.Nombre</h5>
+                        <p class="card-text">@producto.Descripcion</p>
+                        <p>
+                            L. @producto.PrecioVenta.ToString("#,##0.00")
+                        </p>
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <button type="button" onclick="return AgregarCarro('@producto.Id')" class="btn btn-success">Agregar a Carro</button>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        async function AgregarCarro(productoId){
+            $.ajax({
+                type: 'POST',
+                url: `/CarroCompra/AgregarProducto?ProductoId=${productoId}`,
+                contentType: 'application/json',
+                dataType: 'json',
+                success: function (response) {
+                    if (response == true) {
+                        CargarCantidadCarro();
+                    }
+                },
+                failure: function (response) {
+                    alert(reponse.responseText);
+                },
+                error: function (response) {
+                    alert(reponse.ResponseText);
+                }
+            })
+        }
+    </script>
+}

@@ -1,0 +1,80 @@
+﻿@using DesWebProyectoFinal.Data.Entities;
+@model Orden
+@{
+    ViewData["Title"] = "VerOrden";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <h1>Orden</h1>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 rounded-3 border-1">
+            <div class="row mb-1">
+                <div class="col-1"><strong>Orden:</strong></div>
+                <div class="col-5 subrayado">@Model.Id</div>
+                <div class="col-1"><strong>Fecha:</strong></div>
+                <div class="col-5 subrayado">@Model.Fecha</div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-1"><strong>Cliente:</strong></div>
+                <div class="col-5 subrayado">@Model.Cliente.NombreCompleto()</div>
+                <div class="col-1"><strong>RTN:</strong></div>
+                <div class="col-5 subrayado">@Model.Cliente.RTN</div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-4"><strong>Dirección de Entrega:</strong></div>
+                <div class="col-8 subrayado">@Model.DireccionEntrega</div>
+            </div>
+            <div class="row mb-1">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Total Línea</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var det in Model.Detalle)
+                        {
+                            var total = det.PrecioVenta * det.Cantidad;
+                            <tr>
+                                <td>@det.Producto.Nombre</td>
+                                <td>L. @det.PrecioVenta.ToString("#,##0.00#")</td>
+                                <td>@det.Cantidad</td>
+                                <td>L. @total.ToString("#,##0.00")</td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td><strong>Total:</strong></td>
+                            <td>L. @Model.Total.ToString("#,##0.00")</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-2"></div>
+    </div>    
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 text-center">
+            <a asp-controller="Orden" asp-action="MisOrdenes" class="btn btn-primary" role="button">Continuar</a>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</div>
+
+
+

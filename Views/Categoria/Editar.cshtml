@@ -1,0 +1,54 @@
+﻿@model CategoriaViewModel
+@{
+    ViewData["Title"] = "Editar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-4">
+        </div>
+        <div class="col-4">
+            <div class="row form-title">
+                <h1>Editar Categoría</h1>
+            </div>
+            <div class="row form-body">
+                <form asp-action="Editar" asp-controller="Categoria" method="post">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="row mb-1">
+                        <div class="form-group">
+                            <label asp-for="Nombre" class="control-label"></label>
+                            <input asp-for="Nombre" class="form-control" required />
+                            <span asp-validation-for="Nombre" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="form-group">
+                            <label asp-for="Descripcion" class="control-label"></label>
+                            <input asp-for="Descripcion" class="form-control" required />
+                            <span asp-validation-for="Descripcion" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-1">
+                        <div class="col-6 text-center">
+                            <button type="submit" class="btn btn-success">Guardar</button>
+                        </div>
+                        <div class="col-6 text-center">
+                            <a asp-action="Index" asp-controller="Categoria" class="btn btn-danger" role="button">Cancelar</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="row form-footer">
+                &nbsp;
+            </div>
+        </div>
+        <div class="col-4">
+        </div>
+
+    </div>
+
+</div>
+
+
+

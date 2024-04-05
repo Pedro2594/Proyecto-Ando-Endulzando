@@ -1,0 +1,161 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Usuario> SignInManager
+@inject UserManager<Usuario> UserManager
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <div class="row">
+                <h1>Carro de Compra</h1>
+            </div>
+            <div class="row">
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="TBDetalle">
+
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>Total:</td>
+                            <td id="TDTotal" class="Total-Carro"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="row">
+                @if (SignInManager.IsSignedIn(User) && !string.IsNullOrEmpty(UserManager.GetUserAsync(User).Result.Direccion))
+                {
+                    <a asp-controller="Pago" asp-action="Index" class="btn btn-success" role="button">Realizar Pago</a>
+                }
+                else
+                {
+                    <span class="text-danger">Debe ingresar la dirección de entrega para el usuario en su perfil, antes de realizar y pagar la orden.</span>
+                }
+
+            </div>
+        </div>
+    </div>
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" >
+        <div id="errorToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="background-color:red">
+            <div class="toast-header">
+                <strong class="me-auto">Error</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body" id="toast-content">
+                
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts{
+    <script>
+        async function sumarProducto(productoId){
+            $.ajax({
+                type: 'POST',
+                url: `/CarroCompra/SumarProducto?ProductoId=${productoId}`,
+                contentType: 'application/json',
+                dataType: 'json',
+                success: function (response) {
+                    if(response.error == true){
+                        $('#toast-content').html(response.errorMsj);
+                        const toastError = document.getElementById('errorToast');
+                        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastError);
+                        toastBootstrap.show();
+                        
+                    }
+                    CargarCarro();
+                    CargarCantidadCarro();
+                },
+                failure: function (response) {
+                    alert(reponse.responseText);
+                },
+                error: function (response) {
+                    alert(reponse.ResponseText);
+                }
+            })
+        }
+
+        async function restarProducto(productoId) {
+            $.ajax({
+                type: 'POST',
+                url: `/CarroCompra/RestarProducto?ProductoId=${productoId}`,
+                contentType: 'application/json',
+                dataType: 'json',
+                success: function (response) {
+                    if (response.error == true) {
+                        alert(response.errorMsj);
+                    }
+                    CargarCarro();
+                    CargarCantidadCarro();
+                },
+                failure: function (response) {
+                    alert(reponse.responseText);
+                },
+                error: function (response) {
+                    alert(reponse.ResponseText);
+                }
+            })
+        }
+        async function CargarCarro() {
+            $.ajax({
+                type: 'GET',
+                url: `/CarroCompra/GetCarro`,
+                contentType: 'application/json',
+                dataType: 'json',
+                success: function (response) {
+                    if (response != null) {
+                        let contenido = '';
+                        let total = 0.0;
+                        response.forEach(r=> {
+                            contenido += `<tr>
+                             <td><img src="data:image/*;base64,${r.producto.foto}" class="img-carro"/></td>
+                            <td>${r.producto.nombre}</td>
+                            <td>L. ${r.producto.precioVenta.toLocaleString('es-HN',{minimumFractionDigits:2})}</td>
+                            <td>
+                                <button onclick="return restarProducto('${r.producto.id}')" class="btn btn-danger"><i class="bi bi-dash-circle-fill"></i></button>
+                                ${r.cantidad}
+                                <button onclick="return sumarProducto('${r.producto.id}')" class="btn btn-success"><i class="bi bi-plus-circle-fill"></i></button>
+                            </td>
+                                    <td>L. ${(r.cantidad * r.producto.precioVenta).toLocaleString('es-HN', { minimumFractionDigits: 2 })}</td>
+                            </tr>`;
+                            total += (r.cantidad * r.producto.precioVenta);
+                        });
+                        $('#TBDetalle').html(contenido);
+                        $('#TDTotal').html('L. ' + total.toLocaleString('es-HN',{minimumFractionDigits:2}));
+                    }
+                },
+                failure: function (response) {
+                    alert(reponse.responseText);
+                },
+                error: function (response) {
+                    alert(reponse.ResponseText);
+                }
+            })
+        }
+
+        $(document).ready(async function(){
+            await CargarCarro();
+        })
+    </script>
+    
+}

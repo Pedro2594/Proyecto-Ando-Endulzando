@@ -1,0 +1,329 @@
+﻿@model CompraViewModel
+@{
+    ViewData["Title"] = "Crear";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-2">
+        </div>
+        <div class="col-8">
+            <div class="row form-title">
+                <h1>Crear Compra</h1>
+            </div>
+            <div class="row form-body">
+                <form asp-action="Crear" asp-controller="Compra" method="post">
+                    <div class="row mb-2">
+                        <div class="col-md-4">
+                            <label asp-for="Proveedor"></label>
+                            @Html.DropDownList("Proveedor", Model.Proveedores,"Seleccione un proveedor", new {@class="form-control", @value=Model.Proveedor})
+                            <span asp-validation-for="Proveedor" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="FechaCompra"></label>
+                            <input asp-for="FechaCompra" class="form-control"/>
+                            <span asp-validation-for="FechaCompra" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="TotalCompra"></label>
+                            <input asp-for="TotalCompra" class="form-control" readonly/>
+                            <span asp-validation-for="TotalCompra" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-1">
+                        <hr/>
+                    </div>
+                    <div class="row mb-1">
+                        <table>
+                            <tr>
+                                <td>
+                                    <label for="Producto">Producto</label>
+                                    <select id="Producto" class="form-control">
+                                    </select>
+                                </td>
+                                <td>
+                                    <label for="PrecioCompra">Precio Compra:</label>
+                                    <input type="text" id="PrecioCompra" class="form-control" onkeypress="return numericOnly(this);" />
+                                </td>
+                                <td>
+                                    <label for="Cantidad">Cantidad:</label>
+                                    <input type="text" id="Cantidad" class="form-control" onkeypress="return onlyNumberKey(event)" />
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-primary" id="BtnAgregar">Agregar</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="row mb-2">
+                        <table class="table table-striped" id="Detalle" >
+                            <thead>
+                                <tr>                                    
+                                    <th>Producto</th>
+                                    <th>Precio Compra</th>
+                                    <th>Cantidad</th>
+                                    <th>Total Línea</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="DetalleBody">
+                                @for(int i=0; i<Model.Detalle.Count; i++)
+                                {
+                                    <tr>
+                                        
+                                        <td>
+                                            <input id='ProductoId-@i' type="hidden" value="@Model.Detalle[i].Producto.Id" />
+                                            <input id="ProductoNombre-@i" type="text" value="@Model.Detalle[i].Producto.Nombre" readonly />
+                                        </td>
+                                        <td>
+                                            <input id="PrecioCompra-@i" type="text" value="@Model.Detalle[i].PrecioCompra" readonly />
+                                        </td>
+                                        <td>
+                                            <input id="Cantidad-@i" type="text" value="@Model.Detalle[i].Cantidad" readonly />
+                                        </td>
+                                        <td>
+                                            <input id="TotalLinea-@i" type="text" value="@Model.Detalle[i].TotalLinea" readonly />
+                                        </td>
+                                        <td>
+                                            <button id="Borrar-@i" type="button" class="btn btn-danger" onclick="return BorrarItem(this,@i)">Borrar</button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row mb-1">
+                        <div class="col-md-4">
+                            <button type="button" class="btn btn-primary" onclick="return GuardarCompra()">Guardar Compra</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="row form-footer">
+                &nbsp;
+            </div>
+        </div>
+        <div class="col-2">
+        </div>
+
+    </div>
+
+</div>
+
+@section scripts
+{
+    <script>
+        function BorrarItem(btn, indice){
+            var totLinea = $(`#TotalLinea-${indice}`).val();
+            var totCompra = $('#TotalCompra').val();
+            totCompra = totCompra - totLinea;
+            $('#TotalCompra').val(totCompra);
+            $(btn).closest('tr').remove();
+        }
+        function GuardarCompra(){
+            
+
+
+            var datos = {
+                Id: '00000000-0000-0000-0000-000000000000',
+                Proveedor: {
+                    Id: $('#Proveedor').val()
+                },
+                FechaCompra: $('#FechaCompra').val(),
+                TotalCompra: $('#TotalCompra').val(),
+                Detalle:[],
+                Proveedores:[],
+            };
+
+            var table = document.getElementById('DetalleBody');
+            var rows = table.getElementsByTagName('tr');
+            var cant = rows.length;
+
+            if(cant == 0){
+                alert('Debe agregar por lo menos un producto.');
+                return;
+            }
+
+            if ($('#FechaCompra').val() == '0001-01-01T00:00') {
+                alert('Fecha invalida.');
+                return;
+            }
+
+            if ($('#Proveedor').val() == ""){
+                alert('Debe seleccionar un proveedor.');
+                return;
+            }
+
+
+            for(var i=0; i<cant; i++){
+                datos.Detalle.push({
+                    CompraId: '00000000-0000-0000-0000-000000000000',
+                    Compra:null,
+                    Linea: i,
+                    Producto: {
+                        Id: $(`#ProductoId-${i}`).val()
+                    },
+                    Cantidad: $(`#Cantidad-${i}`).val(),
+                    PrecioCompra: $(`#PrecioCompra-${i}`).val(),
+                    TotalLinea: $(`#TotalLinea-${i}`).val()
+                });
+            }
+            
+            $.ajax({
+                type: 'POST',
+                url: '/Compra/Crear',
+                data: JSON.stringify(datos),
+                contentType: 'application/json',
+                dataType: 'json',
+                success: function (response) {
+                    if (response == true) {
+                        window.location.href = '/Compra/Index';
+                    }
+                },
+                failure: function (response) {
+                    alert(reponse.responseText);
+                },
+                error: function (response) {
+                    alert(reponse.ResponseText);
+                }
+            })
+        }
+
+        function onlyNumberKey(evt) {
+            // Only ASCII character in that range allowed
+            var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+            if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+                return false;
+            return true;
+        }
+        var specialKeys = new Array();
+
+        specialKeys.push(8); //Backspace
+        
+        function numericOnly(elementRef) {
+
+            var keyCodeEntered = (event.which) ? event.which : (window.event.keyCode) ? window.event.keyCode : -1;
+
+            if ((keyCodeEntered >= 48) && (keyCodeEntered <= 57)) {
+
+                return true;
+
+            }
+
+            // '.' decimal point...
+
+            else if (keyCodeEntered == 46) {
+
+                // Allow only 1 decimal point ('.')...
+
+                if ((elementRef.value) && (elementRef.value.indexOf('.') >= 0))
+
+                    return false;
+
+                else
+
+                    return true;
+
+            }
+
+            return false;
+
+        }
+        
+
+        $(document).ready(async function(){
+
+            $('#BtnAgregar').on('click', async(e)=>{
+                var table = document.getElementById('DetalleBody');                
+                var rows = table.getElementsByTagName('tr');                
+                var prod = $('#Producto').val();
+                var prodNombre = $('#Producto').text();
+                var cant = $('#Cantidad').val();
+                var precio = $('#PrecioCompra').val();
+                var TotalLinea = cant * precio;
+
+                if(cant == ""){
+                    alert('Cantidad invalida.');
+                    return;
+                }
+
+                if(cant < 0){
+                    alert('Cantidad debe ser mayor a cero.');
+                    return;
+                }
+
+                if(precio == ""){
+                    alert('Precio invalido.');
+                    return;
+                }
+
+                if(precio < 0){
+                    alert('Precio debe ser mayor a cero.');
+                    return;
+                }
+
+                if(prod == "" || prod == null){
+                    alert('Debe seleccionar un producto.');
+                    return;
+                }
+
+                var i = rows.length;
+                var newRow = table.insertRow();
+
+
+                newRow.innerHTML = `<td>
+                                        <input id='ProductoId-${i}' type="hidden" value="${prod}" />
+                                                <input id="ProductoNombre-${i}" class="form-control" type="text" value="${prodNombre}" readonly  />
+                                    </td>
+                                    <td>
+                                                <input id="PrecioCompra-${i}" type="text" class="form-control" value="${precio}" readonly />
+                                    </td>
+                                    <td>
+                                                <input id="Cantidad-${i}" type="text" class="form-control" value="${cant}" readonly />
+                                    </td>
+                                    <td>
+                                                <input id="TotalLinea-${i}" type="text" class="form-control" value="${TotalLinea}" readonly />
+                                    </td>
+                                    <td>
+                                                <button id="Borrar-${i}" type="button" class="btn btn-danger" onclick="return BorrarItem(this,${i})">Borrar</button>
+                                    </td>`;
+
+                $('#Cantidad').val("0")
+                $('#PrecioCompra').val("0.0");
+                var totalCompra = parseFloat($('#TotalCompra').val());
+                totalCompra = totalCompra + TotalLinea;
+                $('#TotalCompra').val(totalCompra);
+            });
+
+
+            $('#Proveedor').on('change', async (e)=>{
+                var proveedorId = e.target.value;
+                $.ajax({
+                    type: 'GET',
+                    url: `/Producto/ProductoProveedor?ProveedorId=${proveedorId}`,                    
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    success: function (response) {
+                        console.log(response);
+                        var combo = $('#Producto');
+                        combo.empty();
+                        response.forEach(r=>{
+                            var option = document.createElement('option');
+                            option.value = r.id;
+                            option.text = r.nombre;
+                            combo.append(option);
+                        })
+                    },
+                    failure: function (response) {
+                        alert(reponse.responseText);
+                    },
+                    error: function (response) {
+                        alert(reponse.ResponseText);
+                    }
+                })
+            });
+        });
+    </script>
+}
